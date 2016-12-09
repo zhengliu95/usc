@@ -1,0 +1,45 @@
+;> python opbasm.py -i cntr.psm -t templates\ROM_form_S3_1K.vhdl
+; BTN0 = Load lower 8 from switches
+; BTN1 = Load upper 8 from switches
+; BTN2 = 9801 dec. = 2649 hex
+; BTN3 = reset
+
+L1: input	s1,00  ; read btn
+	; add your code here
+
+I0: compare	s1, 00;
+	jump	Z, I0;
+I1: compare	s1, 01;
+	jump	Z, I1;
+	
+	compare	s1, 04;
+	jump 	Z, I3;
+I3: load 	t1, 26;
+	load 	t2, 49;
+	jump 	F0;
+	
+	compare s1, 02;
+	jump 	Z, I4;
+I4: load 	s1, 03;
+	input	t1, s1; 
+I5:	compare btns, 01;
+	jump 	NZ, I5;
+	load	s1, 02;
+	input	t2, s1;
+	jump	F0;
+	
+F0:	output	x1, t1;
+	output	x2, t2;
+	output	s2, 01;
+I6:	compare	d0, 00;
+	jump	Z, I6;
+	
+	load	a0, 02;
+	input	t0, a0;
+	output	d0, t0;
+	
+	output	s2, 01;
+	
+
+
+	jump 	L1     ; repeat forever
